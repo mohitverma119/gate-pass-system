@@ -1,0 +1,22 @@
+{
+    "sqltools.connections": [
+        {
+            "mysqlOptions": {
+                "authProtocol": "default"
+            },
+            "previewLimit": 50,
+            "server": "localhost",
+            "port": 3306,
+            "driver": "MariaDB",
+            "name": "localhost",
+            "database": "gate_pass_system",
+            "username": "root",
+            "password": ""
+        }
+    ],
+    "cSpell.words": [
+        "fullname",
+        "gatepass",
+        "gatepasses"
+    ]
+}
