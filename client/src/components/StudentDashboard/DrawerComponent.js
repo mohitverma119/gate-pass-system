@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useMediaQuery, useTheme } from "@mui/material";
 import {
   List,
   ListItem,
@@ -25,8 +26,11 @@ const drawerWidth = 240;
 
 const buttonActiveColor = "#a9a7ac9c";
 
-const DrawerContent = ({ setDrawerOpen, handleItemClick }) => {
+const DrawerContent = ({ setDrawerOpen, handleItemClick , isMobile  }) => {
   const [activeButton, setActiveButton] = useState("home");
+
+ // const theme = useTheme();
+  //const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
   const navigate = useNavigate();
 
@@ -39,6 +43,13 @@ const DrawerContent = ({ setDrawerOpen, handleItemClick }) => {
   const handleClick = (item) => {
     setActiveButton(item);
     handleItemClick(item);
+  
+    if (isMobile) {
+      // Close the drawer with a slight delay
+      setTimeout(() => {
+        setDrawerOpen(false);
+      }, 50); // 50 milliseconds delay
+    }
   };
 
   return (
