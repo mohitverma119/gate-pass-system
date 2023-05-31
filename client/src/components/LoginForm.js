@@ -49,8 +49,8 @@ const LoginForm = () => {
       navigate('/student-dashboard');
     } catch (error) {
       console.error('Error sending login request:', error);
-      //setError('Invalid email or password');
-      setError('Original Error: ',error);
+      setError('Invalid email or password');
+      //setError('Original Error: ',error);
     }
   };
 

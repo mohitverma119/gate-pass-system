@@ -32,7 +32,7 @@ const MyProfile = () => {
       />
       <TextField
         label={
-          localStorage.getItem("role") === "student"
+          localStorage.getItem("user_role") === "student"
             ? "Entry No"
             : "Employee Code"
         }

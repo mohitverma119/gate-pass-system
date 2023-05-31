@@ -6,7 +6,7 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const crypto = require('crypto');
 const app = express();
-const port = 3000;
+const port = 8000;
 //const secretKey = 'your-secret-key';
 
 const password = 'password';
@@ -55,7 +55,8 @@ app.post('/api/login', (req, res) => {
             console.error(error);
             res.status(500).send('Internal server error');
           } else if (result) {
-            const token = jwt.sign({ id: user.id, role: user.role }, secretKey);
+            //const token = jwt.sign({ id: user.id, role: user.role }, secretKey);
+            const token = jwt.sign({ id: user.id, role: user.role }, secretKey, { expiresIn: '1h' });
             const { id, fullname, role, email, entry_emp_no, hostel_id, course_id } = user;
             res.json({ token, id, fullname, role, email, entry_emp_no, hostel_id, course_id });
           } else {
