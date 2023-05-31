@@ -13,7 +13,7 @@ const rows = [
   createData('Gingerbread', 356, 16.0, 49, 3.9),
 ];
 
-const Apply = () => {
+const StudentHome = () => {
   return (
     <TableContainer component={Paper}>
       <Table sx={{ minWidth: 650 }} aria-label="simple table">
@@ -47,4 +47,4 @@ const Apply = () => {
   );
 }
 
-export default Apply;
+export default StudentHome;

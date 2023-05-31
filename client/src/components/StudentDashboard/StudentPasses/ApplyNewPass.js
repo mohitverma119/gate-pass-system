@@ -8,7 +8,7 @@ import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { Label } from "@mui/icons-material";
 import { TimePicker } from "@mui/x-date-pickers/TimePicker";
 
-const MyProfile = () => {
+const ApplyNewPass = () => {
   const [roomNo, setRoomNo] = useState("");
   const [blockNo, setBlockNo] = useState("");
   const [leavingPurpose, setLeavingPurpose] = useState("");
@@ -172,4 +172,4 @@ const MyProfile = () => {
   );
 };
 
-export default MyProfile;
+export default ApplyNewPass;

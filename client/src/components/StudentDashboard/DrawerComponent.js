@@ -1,35 +1,29 @@
 import React, { useState } from "react";
-import { useMediaQuery, useTheme } from "@mui/material";
 import {
   List,
-  ListItem,
   ListItemIcon,
   ListItemText,
   Box,
   ListItemButton,
-  Typography,
 } from "@mui/material";
 import {
   Home as HomeIcon,
-  AddCircle as PlusCircleIcon,
-  Schedule as ScheduleIcon,
 } from "@mui/icons-material";
 
 import EditNoteIcon from "@mui/icons-material/EditNote";
-import PowerSettingsNewIcon from '@mui/icons-material/PowerSettingsNew';
+import PowerSettingsNewIcon from "@mui/icons-material/PowerSettingsNew";
 import ListIcon from "@mui/icons-material/List";
-import PersonIcon from '@mui/icons-material/Person';
+import PersonIcon from "@mui/icons-material/Person";
 import { useNavigate } from "react-router-dom";
-
 
 const drawerWidth = 240;
 
 const buttonActiveColor = "#a9a7ac9c";
 
-const DrawerContent = ({ setDrawerOpen, handleItemClick , isMobile  }) => {
+const DrawerContent = ({ setDrawerOpen, handleItemClick, isMobile }) => {
   const [activeButton, setActiveButton] = useState("home");
 
- // const theme = useTheme();
+  // const theme = useTheme();
   //const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
   const navigate = useNavigate();
@@ -43,7 +37,7 @@ const DrawerContent = ({ setDrawerOpen, handleItemClick , isMobile  }) => {
   const handleClick = (item) => {
     setActiveButton(item);
     handleItemClick(item);
-  
+
     if (isMobile) {
       // Close the drawer with a slight delay
       setTimeout(() => {
@@ -53,7 +47,7 @@ const DrawerContent = ({ setDrawerOpen, handleItemClick , isMobile  }) => {
   };
 
   return (
-    <Box sx={{ width: drawerWidth }} role="presentation">
+    <Box sx={{ width: drawerWidth, marginTop: 4  }} role="presentation">
       <Box
         sx={{
           display: "flex",
@@ -62,11 +56,11 @@ const DrawerContent = ({ setDrawerOpen, handleItemClick , isMobile  }) => {
           p: 2,
         }}
       >
-        <img
-          src="https://www.smvdu.ac.in/templates/jsmvdu2017/img/bklogo-headerg20.png" // Replace with the path to your logo image
+       {/* <img
+          src="https://www.smvdu.ac.in/templates/jsmvdu2017/img/bklogo-headerg20.png"
           alt="Logo"
           style={{ width: "65%", height: "auto" }}
-        />
+      />*/}
       </Box>
       <List>
         <ListItemButton
