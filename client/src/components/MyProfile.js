@@ -1,6 +1,7 @@
 import React from "react";
 import { Button, TextField, Box, Typography } from "@mui/material";
 import { Label } from "@mui/icons-material";
+import withAuthCheck from "./checkAuth";
 
 const MyProfile = () => {
   return (
@@ -53,4 +54,4 @@ const MyProfile = () => {
   );
 };
 
-export default MyProfile;
+export default withAuthCheck(MyProfile);

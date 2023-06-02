@@ -6,6 +6,7 @@ import ViewAllPasses from "./StudentPasses/ViewAllPasses";
 import MyProfile from "../MyProfile";
 import StudentHome from "./StudentHome";
 import CustomAppBar from "../Common/DashboardAppBar";
+import withAuthCheck from "../checkAuth";
 
 const drawerWidth = 240;
 
@@ -102,4 +103,4 @@ const Dashboard = () => {
   );
 };
 
-export default Dashboard;
+export default withAuthCheck(Dashboard);

@@ -1,5 +1,6 @@
 import React from 'react';
 import { TableContainer, Paper, Table, TableHead, TableRow, TableCell, TableBody } from '@mui/material';
+import withAuthCheck from '../checkAuth';
 
 const createData = (name, calories, fat, carbs, protein) => {
   return { name, calories, fat, carbs, protein };
@@ -47,4 +48,4 @@ const StudentHome = () => {
   );
 }
 
-export default StudentHome;
+export default withAuthCheck(StudentHome);

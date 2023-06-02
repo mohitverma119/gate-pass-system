@@ -26,6 +26,7 @@ const CustomAppBar = ({ handleDrawerToggle }) => {
     setAnchorEl(event.currentTarget);
   };
 
+
   const handleClose = () => {
     setAnchorEl(null);
   };
@@ -88,7 +89,7 @@ const CustomAppBar = ({ handleDrawerToggle }) => {
             open={open}
             onClose={handleClose}
           >
-            {/*<MenuItem onClick={handleClose}>My Profile</MenuItem>*/}
+            {/* <MenuItem onClick={handleClose}>My Profile</MenuItem> */}
             <MenuItem onClick={handleLogout}>Logout</MenuItem>
           </Menu>
         </div>

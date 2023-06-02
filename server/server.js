@@ -56,7 +56,7 @@ app.post('/api/login', (req, res) => {
             res.status(500).send('Internal server error');
           } else if (result) {
             //const token = jwt.sign({ id: user.id, role: user.role }, secretKey);
-            const token = jwt.sign({ id: user.id, role: user.role }, secretKey, { expiresIn: '1h' });
+            const token = jwt.sign({ id: user.id, role: user.role }, secretKey, { expiresIn: '1m' });
             const { id, fullname, role, email, entry_emp_no, hostel_id, course_id } = user;
             res.json({ token, id, fullname, role, email, entry_emp_no, hostel_id, course_id });
           } else {
@@ -141,7 +141,7 @@ app.get('/api/gatepasses/:studentId', verifyToken, (req, res) => {
 
 
 // Fetch Single gatepass by ID
-app.get('/api/gatepasses/:id', verifyToken, (req, res) => {
+app.get('/api/singlegatepass/:id', verifyToken, (req, res) => {
   const { role } = req.user;
   if (role === 'admin' || role === 'teacher' || role === 'security_guard' || role === 'student') {
     const id = req.params.id;
