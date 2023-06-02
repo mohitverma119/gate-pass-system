@@ -7,6 +7,7 @@ import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { Label } from "@mui/icons-material";
 import { TimePicker } from "@mui/x-date-pickers/TimePicker";
+import withAuthCheck from "../../checkAuth";
 
 const ApplyNewPass = () => {
   const [roomNo, setRoomNo] = useState("");
@@ -67,7 +68,6 @@ const ApplyNewPass = () => {
             type="text"
             value={roomNo}
             onChange={handleRoomNo}
-        
             required
           />
         </Grid>
@@ -172,4 +172,4 @@ const ApplyNewPass = () => {
   );
 };
 
-export default ApplyNewPass;
+export default withAuthCheck(ApplyNewPass);
