@@ -332,6 +332,7 @@ const ViewAllPasses = () => {
               <TableBody>
                 {(rowsPerPage > 0
                   ? gatepasses
+                  .filter((gatepass) => gatepass.pass_status !== "in-active")
                       .filter((gatepass) => {
                         if (currentStatus === "all") {
                           return true;
@@ -401,20 +402,24 @@ const ViewAllPasses = () => {
                       >
                         <VisibilityIcon fontSize="inherit" />
                       </IconButton>
-                      <IconButton
-                        color="primary"
-                        size="small"
-                        aria-label="Edit"
-                      >
-                        <EditIcon fontSize="inherit" />
-                      </IconButton>
-                      <IconButton
-                        sx={{ color: red[500] }}
-                        size="small"
-                        aria-label="Delete"
-                      >
-                        <DeleteIcon fontSize="inherit" />
-                      </IconButton>
+                      {gatepass.pass_status !== "completed" && (
+                        <>
+                          <IconButton
+                            color="primary"
+                            size="small"
+                            aria-label="Edit"
+                          >
+                            <EditIcon fontSize="inherit" />
+                          </IconButton>
+                          <IconButton
+                            sx={{ color: red[500] }}
+                            size="small"
+                            aria-label="Delete"
+                          >
+                            <DeleteIcon fontSize="inherit" />
+                          </IconButton>
+                        </>
+                      )}
                     </TableCell>
                   </TableRow>
                 ))}

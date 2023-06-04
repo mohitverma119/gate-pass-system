@@ -55,8 +55,8 @@ app.post('/api/login', (req, res) => {
             console.error(error);
             res.status(500).send('Internal server error');
           } else if (result) {
-            //const token = jwt.sign({ id: user.id, role: user.role }, secretKey);
-            const token = jwt.sign({ id: user.id, role: user.role }, secretKey, { expiresIn: '1m' });
+            const token = jwt.sign({ id: user.id, role: user.role }, secretKey);
+            //const token = jwt.sign({ id: user.id, role: user.role }, secretKey, { expiresIn: '4h' });
             const { id, fullname, role, email, entry_emp_no, hostel_id, course_id } = user;
             res.json({ token, id, fullname, role, email, entry_emp_no, hostel_id, course_id });
           } else {
@@ -202,7 +202,7 @@ app.put('/api/gatepasses/:id', verifyToken, (req, res) => {
 
 
 // (Make Gatepass active or inactive by Student)
-app.put('/api/gatepasses/:id', verifyToken, (req, res) => {
+app.put('/api/student/deletegatepass/:id', verifyToken, (req, res) => {
   const { role } = req.user;
   if (role === 'student' || role === 'admin') {
     const id = req.params.id;
