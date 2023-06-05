@@ -244,7 +244,7 @@ app.put('/api/gatepasses/:id', verifyToken, (req, res) => {
   }
 });
 
-// Start the server
+// Start the backend server
 app.listen(port, () => {
   console.log(`Server is running on http://localhost:${port}`);
 });
