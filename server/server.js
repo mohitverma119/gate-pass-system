@@ -142,10 +142,18 @@ app.get('/api/gatepasses/:studentId', verifyToken, (req, res) => {
 
 // Fetch Single gatepass by ID
 app.get('/api/singlegatepass/:id', verifyToken, (req, res) => {
-  const { role } = req.user;
+  const { role, id: userId } = req.user;
   if (role === 'admin' || role === 'teacher' || role === 'security_guard' || role === 'student') {
-    const id = req.params.id;
-    pool.query('SELECT * FROM gatepasses WHERE id = ?', [id], (error, results) => {
+    const gatepassId = req.params.id;
+    const sqlQuery = `
+    SELECT gatepasses.*, users.fullname AS fullname, users.entry_emp_no AS entry_emp_no, hostels.hostel_name AS hostel_name, courses.course_name AS course_name 
+    FROM gatepasses 
+    INNER JOIN users ON gatepasses.student_id = users.id 
+    INNER JOIN hostels ON users.hostel_id = hostels.id 
+    INNER JOIN courses ON users.course_id = courses.id 
+    WHERE gatepasses.id = ?
+    `;
+    pool.query(sqlQuery, [gatepassId], (error, results) => {
       if (error) {
         console.error(error);
         res.status(500).send('Internal server error');
@@ -159,6 +167,8 @@ app.get('/api/singlegatepass/:id', verifyToken, (req, res) => {
     res.status(403).send('Forbidden');
   }
 });
+
+
 
 
 // Handle GET all gatepasses by teacher id

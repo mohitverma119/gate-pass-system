@@ -262,7 +262,7 @@ const ViewAllPasses = () => {
                       direction={order}
                       onClick={createSortHandler("leaving_purpose")}
                     >
-                      Reason
+                      Purpose
                     </TableSortLabel>
                   </TableCell>
                   <TableCell align="left">
@@ -332,7 +332,9 @@ const ViewAllPasses = () => {
               <TableBody>
                 {(rowsPerPage > 0
                   ? gatepasses
-                  .filter((gatepass) => gatepass.pass_status !== "in-active")
+                      .filter(
+                        (gatepass) => gatepass.pass_status !== "in-active"
+                      )
                       .filter((gatepass) => {
                         if (currentStatus === "all") {
                           return true;
@@ -402,24 +404,25 @@ const ViewAllPasses = () => {
                       >
                         <VisibilityIcon fontSize="inherit" />
                       </IconButton>
-                      {gatepass.pass_status !== "completed" && (
-                        <>
-                          <IconButton
-                            color="primary"
-                            size="small"
-                            aria-label="Edit"
-                          >
-                            <EditIcon fontSize="inherit" />
-                          </IconButton>
-                          <IconButton
-                            sx={{ color: red[500] }}
-                            size="small"
-                            aria-label="Delete"
-                          >
-                            <DeleteIcon fontSize="inherit" />
-                          </IconButton>
-                        </>
-                      )}
+                      {gatepass.pass_status !== "completed" &&
+                        gatepass.warden_pass_status !== "rejected" && (
+                          <>
+                            <IconButton
+                              color="primary"
+                              size="small"
+                              aria-label="Edit"
+                            >
+                              <EditIcon fontSize="inherit" />
+                            </IconButton>
+                            <IconButton
+                              sx={{ color: red[500] }}
+                              size="small"
+                              aria-label="Delete"
+                            >
+                              <DeleteIcon fontSize="inherit" />
+                            </IconButton>
+                          </>
+                        )}
                     </TableCell>
                   </TableRow>
                 ))}
