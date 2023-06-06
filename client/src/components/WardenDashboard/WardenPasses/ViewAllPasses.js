@@ -49,11 +49,11 @@ const ViewAllPasses = () => {
 
   useEffect(() => {
     const fetchGatepasses = async () => {
-      const studentId = localStorage.getItem("user_id"); // fetch studentId from localstorage
+      const userId = localStorage.getItem("user_id"); // fetch studentId from localstorage
       const token = localStorage.getItem("user_token"); // fetch token from localstorage
 
       const response = await fetch(
-        `${process.env.REACT_APP_API_BASE_URL}/gatepasses/${studentId}`,
+        `${process.env.REACT_APP_API_BASE_URL}/warden/gatepasses/${userId}`,
         {
           method: "GET",
           headers: {
@@ -436,23 +436,23 @@ const ViewAllPasses = () => {
                       {gatepass.pass_status !== "completed" &&
                         gatepass.warden_pass_status !== "rejected" && (
                           <>
-                             <Tooltip title="Edit">
-                            <IconButton
-                              color="primary"
-                              size="small"
-                              aria-label="Edit" 
-                            >
-                              <EditIcon fontSize="inherit" />
-                            </IconButton>
+                            <Tooltip title="Edit">
+                              <IconButton
+                                color="primary"
+                                size="small"
+                                aria-label="Edit"
+                              >
+                                <EditIcon fontSize="inherit" />
+                              </IconButton>
                             </Tooltip>
                             <Tooltip title="Delete">
-                            <IconButton
-                              sx={{ color: red[500] }}
-                              size="small"
-                              aria-label="Delete"
-                            >
-                              <DeleteIcon fontSize="inherit" />
-                            </IconButton>
+                              <IconButton
+                                sx={{ color: red[500] }}
+                                size="small"
+                                aria-label="Delete"
+                              >
+                                <DeleteIcon fontSize="inherit" />
+                              </IconButton>
                             </Tooltip>
                           </>
                         )}

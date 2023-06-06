@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 5.2.1
+-- version 5.1.1
 -- https://www.phpmyadmin.net/
 --
--- Host: 127.0.0.1
--- Generation Time: Jun 06, 2023 at 01:23 PM
--- Server version: 10.4.28-MariaDB
--- PHP Version: 8.2.4
+-- Host: localhost
+-- Generation Time: Jun 06, 2023 at 09:01 PM
+-- Server version: 10.4.20-MariaDB
+-- PHP Version: 8.0.9
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -31,7 +31,7 @@ CREATE TABLE `courses` (
   `id` int(11) NOT NULL,
   `course_name` varchar(255) NOT NULL,
   `department_id` int(11) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data for table `courses`
@@ -51,7 +51,7 @@ CREATE TABLE `departments` (
   `id` int(11) NOT NULL,
   `dept_name` varchar(255) NOT NULL,
   `dept_short_name` varchar(255) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data for table `departments`
@@ -90,14 +90,14 @@ CREATE TABLE `gatepasses` (
   `security_clearance_datetime` datetime DEFAULT NULL,
   `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
   `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data for table `gatepasses`
 --
 
 INSERT INTO `gatepasses` (`id`, `student_id`, `hostel_id`, `teacher_id`, `qr_code`, `pass_status`, `dept_pass_status`, `warden_pass_status`, `rejected_by`, `reject_reason`, `room_no`, `block_no`, `leaving_purpose`, `address`, `contact_no`, `leaving_date`, `leaving_time`, `returning_date`, `security_clearance`, `security_clearance_datetime`, `created_at`, `updated_at`) VALUES
-(1, 9, 2, 5, 'ABC123', 'completed', 'approved', 'approved', NULL, NULL, '203', 'D', 'Going Home', 'Kathua, J&K', '9906547528', '2023-06-02', '18:52:16', '2023-06-15', 'verified', '2023-06-02 15:16:15', '2023-05-29 09:43:28', '2023-06-06 10:04:46'),
+(1, 9, 2, 5, 'ABC123', 'completed', 'approved', 'approved', NULL, NULL, '203', 'D', 'Going Home', 'Kathua, J&K', '9906547528', '2023-06-02', '18:52:16', '2023-06-09', 'verified', '2023-06-02 15:16:15', '2023-05-29 09:43:28', '2023-06-06 17:39:41'),
 (2, 9, 3, 7, 'DEF456', 'active', 'approved', 'rejected', 'warden', 'Involved in various tech fest to be held this week.', '405', 'A', 'Health not well', 'Reasi, J&K', '9963541258', '2023-06-02', '17:52:25', '2023-06-21', 'not-verified', '0000-00-00 00:00:00', '2023-05-29 09:43:28', '2023-06-06 10:16:28'),
 (4, 9, 3, 7, 'DEF456s', 'active', 'rejected', 'pending', 'director', 'Not allowed', '405', 'A', 'Marriage', 'Reasi, J&K', '9963541258', '2023-06-16', '17:52:25', '2023-06-24', 'not-verified', '0000-00-00 00:00:00', '2023-05-29 09:43:28', '2023-06-06 11:18:50');
 
@@ -111,7 +111,7 @@ CREATE TABLE `hostels` (
   `id` int(11) NOT NULL,
   `hostel_name` varchar(255) NOT NULL,
   `teacher_id` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data for table `hostels`
@@ -135,11 +135,11 @@ CREATE TABLE `users` (
   `entry_emp_no` varchar(255) DEFAULT NULL,
   `email` varchar(255) NOT NULL,
   `password` varchar(255) NOT NULL,
-  `role` enum('student','teacher','security_guard','admin') NOT NULL,
+  `role` enum('student','director','warden','security_guard','admin') DEFAULT NULL,
   `hostel_id` int(11) DEFAULT NULL,
   `course_id` int(11) DEFAULT NULL,
   `dept_id` int(11) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data for table `users`
@@ -147,12 +147,12 @@ CREATE TABLE `users` (
 
 INSERT INTO `users` (`id`, `fullname`, `entry_emp_no`, `email`, `password`, `role`, `hostel_id`, `course_id`, `dept_id`) VALUES
 (1, 'Arun Singh', '17mca112', 'arun@example.com', '$2b$10$S3RVw7AwDpSZB68U8hAUbORI2mJ51h/shC8EC.ZXbHVUEMLBH7I6W', 'student', 3, 1, 1),
-(2, 'Sonika Gupta', '365423', 'sonika@example.com', '$2b$10$S3RVw7AwDpSZB68U8hAUbORI2mJ51h/shC8EC.ZXbHVUEMLBH7I6W', 'teacher', NULL, NULL, 1),
+(2, 'Sonika Gupta', '365423', 'sonika@example.com', '$2b$10$S3RVw7AwDpSZB68U8hAUbORI2mJ51h/shC8EC.ZXbHVUEMLBH7I6W', 'warden', NULL, NULL, 1),
 (3, 'Bob Johnson', '3256', 'bob.johnson@example.com', '$2b$10$S3RVw7AwDpSZB68U8hAUbORI2mJ51h/shC8EC.ZXbHVUEMLBH7I6W', 'security_guard', NULL, NULL, NULL),
 (4, 'Admin', '365742', 'admin@example.com', '$2b$10$S3RVw7AwDpSZB68U8hAUbORI2mJ51h/shC8EC.ZXbHVUEMLBH7I6W', 'admin', NULL, NULL, NULL),
-(5, 'Pooja Gupta', '365746', 'pooja@example.com', '$2b$10$S3RVw7AwDpSZB68U8hAUbORI2mJ51h/shC8EC.ZXbHVUEMLBH7I6W', 'teacher', NULL, NULL, 1),
-(6, 'Uday Partap', '457852', 'uday@example.com', '$2b$10$S3RVw7AwDpSZB68U8hAUbORI2mJ51h/shC8EC.ZXbHVUEMLBH7I6W', 'teacher', NULL, NULL, 2),
-(7, 'Manoj Gupta', '562458', 'manoj@example.com', '$2b$10$S3RVw7AwDpSZB68U8hAUbORI2mJ51h/shC8EC.ZXbHVUEMLBH7I6W', 'teacher', NULL, NULL, 1),
+(5, 'Pooja Gupta', '365746', 'pooja@example.com', '$2b$10$S3RVw7AwDpSZB68U8hAUbORI2mJ51h/shC8EC.ZXbHVUEMLBH7I6W', 'warden', NULL, NULL, 1),
+(6, 'Uday Partap', '457852', 'uday@example.com', '$2b$10$S3RVw7AwDpSZB68U8hAUbORI2mJ51h/shC8EC.ZXbHVUEMLBH7I6W', 'warden', NULL, NULL, 2),
+(7, 'Manoj Gupta', '562458', 'manoj@example.com', '$2b$10$S3RVw7AwDpSZB68U8hAUbORI2mJ51h/shC8EC.ZXbHVUEMLBH7I6W', 'warden', NULL, NULL, 1),
 (8, 'Aditya Singh', '19bca093', 'aditya@example.com', '$2b$10$S3RVw7AwDpSZB68U8hAUbORI2mJ51h/shC8EC.ZXbHVUEMLBH7I6W', 'student', 4, 1, 1),
 (9, 'Nisha Rani', '16mna012', 'nisha@example.com', '$2b$10$S3RVw7AwDpSZB68U8hAUbORI2mJ51h/shC8EC.ZXbHVUEMLBH7I6W', 'student', 2, 2, 1),
 (10, 'Jyoti Sharma', '15han034', 'jyoti@example.com', '$2b$10$S3RVw7AwDpSZB68U8hAUbORI2mJ51h/shC8EC.ZXbHVUEMLBH7I6W', 'student', 1, 1, 2);

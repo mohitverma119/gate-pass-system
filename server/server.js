@@ -124,7 +124,7 @@ app.get('/api/gatepasses', verifyToken, (req, res) => {
 // Handle GET requests for all gatepasses by student id
 app.get('/api/gatepasses/:studentId', verifyToken, (req, res) => {
   const { role } = req.user;
-  if (role === 'admin' || role === 'teacher' || role === 'security_guard' || role === 'student') {
+  if (role === 'admin' || role === 'warden' || role === 'security_guard' || role === 'student') {
     const { studentId } = req.params;
     pool.query('SELECT * FROM gatepasses WHERE student_id = ?', [studentId], (error, results) => {
       if (error) {
@@ -143,7 +143,7 @@ app.get('/api/gatepasses/:studentId', verifyToken, (req, res) => {
 // Fetch Single gatepass by ID
 app.get('/api/singlegatepass/:id', verifyToken, (req, res) => {
   const { role, id: userId } = req.user;
-  if (role === 'admin' || role === 'teacher' || role === 'security_guard' || role === 'student') {
+  if (role === 'admin' || role === 'warden' || role === 'security_guard' || role === 'student') {
     const gatepassId = req.params.id;
     const sqlQuery = `
     SELECT gatepasses.*, users.fullname AS fullname, users.entry_emp_no AS entry_emp_no, hostels.hostel_name AS hostel_name, courses.course_name AS course_name 
@@ -171,10 +171,10 @@ app.get('/api/singlegatepass/:id', verifyToken, (req, res) => {
 
 
 
-// Handle GET all gatepasses by teacher id
-app.get('/api/gatepasses/:teacherId', verifyToken, (req, res) => {
+// Handle GET all gatepasses by warden id
+app.get('/api/warden/gatepasses/:teacherId', verifyToken, (req, res) => {
   const { role } = req.user;
-  if (role === 'admin' || role === 'teacher' || role === 'security_guard') {
+  if (role === 'admin' || role === 'warden' || role === 'security_guard') {
     const { teacherId } = req.params;
     pool.query('SELECT * FROM gatepasses WHERE teacher_id = ?', [teacherId], (error, results) => {
       if (error) {
@@ -189,10 +189,10 @@ app.get('/api/gatepasses/:teacherId', verifyToken, (req, res) => {
   }
 });
 
-//(Update Gatepass status by Teacher)
+//(Update Gatepass status by warden)
 app.put('/api/gatepasses/:id', verifyToken, (req, res) => {
   const { role } = req.user;
-  if (role === 'teacher' || role === 'admin') {
+  if (role === 'warden' || role === 'admin') {
     const id = req.params.id;
     const { warden_pass_status } = req.body;
     pool.query('UPDATE gatepasses SET warden_pass_status = ? WHERE id = ?', [warden_pass_status, id], (error, results) => {
