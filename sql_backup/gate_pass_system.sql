@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 5.1.1
+-- version 5.2.1
 -- https://www.phpmyadmin.net/
 --
--- Host: localhost
--- Generation Time: Jun 04, 2023 at 06:45 PM
--- Server version: 10.4.20-MariaDB
--- PHP Version: 8.0.9
+-- Host: 127.0.0.1
+-- Generation Time: Jun 06, 2023 at 01:23 PM
+-- Server version: 10.4.28-MariaDB
+-- PHP Version: 8.2.4
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -31,7 +31,7 @@ CREATE TABLE `courses` (
   `id` int(11) NOT NULL,
   `course_name` varchar(255) NOT NULL,
   `department_id` int(11) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `courses`
@@ -51,7 +51,7 @@ CREATE TABLE `departments` (
   `id` int(11) NOT NULL,
   `dept_name` varchar(255) NOT NULL,
   `dept_short_name` varchar(255) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `departments`
@@ -74,7 +74,10 @@ CREATE TABLE `gatepasses` (
   `teacher_id` int(11) NOT NULL,
   `qr_code` varchar(255) NOT NULL,
   `pass_status` enum('active','in-active','completed') DEFAULT 'active',
+  `dept_pass_status` enum('pending','approved','rejected') DEFAULT 'pending',
   `warden_pass_status` enum('pending','approved','rejected') NOT NULL,
+  `rejected_by` enum('director','warden') DEFAULT NULL,
+  `reject_reason` text DEFAULT NULL,
   `room_no` varchar(255) DEFAULT NULL,
   `block_no` varchar(255) DEFAULT NULL,
   `leaving_purpose` text DEFAULT NULL,
@@ -87,16 +90,16 @@ CREATE TABLE `gatepasses` (
   `security_clearance_datetime` datetime DEFAULT NULL,
   `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
   `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `gatepasses`
 --
 
-INSERT INTO `gatepasses` (`id`, `student_id`, `hostel_id`, `teacher_id`, `qr_code`, `pass_status`, `warden_pass_status`, `room_no`, `block_no`, `leaving_purpose`, `address`, `contact_no`, `leaving_date`, `leaving_time`, `returning_date`, `security_clearance`, `security_clearance_datetime`, `created_at`, `updated_at`) VALUES
-(1, 9, 2, 5, 'ABC123', 'completed', 'approved', '203', 'D', 'Going Home', 'Kathua, J&K', '9906547528', '2023-06-02', '18:52:16', '2023-06-15', 'verified', '2023-06-02 15:16:15', '2023-05-29 09:43:28', '2023-06-02 16:40:43'),
-(2, 9, 3, 7, 'DEF456', 'in-active', 'rejected', '405', 'A', 'Health not well', 'Reasi, J&K', '9963541258', '2023-06-02', '17:52:25', '2023-06-21', 'not-verified', '0000-00-00 00:00:00', '2023-05-29 09:43:28', '2023-06-03 17:41:38'),
-(4, 9, 3, 7, 'DEF456s', 'active', 'pending', '405', 'A', 'Marriage', 'Reasi, J&K', '9963541258', '2023-06-16', '17:52:25', '2023-06-24', 'not-verified', '0000-00-00 00:00:00', '2023-05-29 09:43:28', '2023-06-02 16:42:28');
+INSERT INTO `gatepasses` (`id`, `student_id`, `hostel_id`, `teacher_id`, `qr_code`, `pass_status`, `dept_pass_status`, `warden_pass_status`, `rejected_by`, `reject_reason`, `room_no`, `block_no`, `leaving_purpose`, `address`, `contact_no`, `leaving_date`, `leaving_time`, `returning_date`, `security_clearance`, `security_clearance_datetime`, `created_at`, `updated_at`) VALUES
+(1, 9, 2, 5, 'ABC123', 'completed', 'approved', 'approved', NULL, NULL, '203', 'D', 'Going Home', 'Kathua, J&K', '9906547528', '2023-06-02', '18:52:16', '2023-06-15', 'verified', '2023-06-02 15:16:15', '2023-05-29 09:43:28', '2023-06-06 10:04:46'),
+(2, 9, 3, 7, 'DEF456', 'active', 'approved', 'rejected', 'warden', 'Involved in various tech fest to be held this week.', '405', 'A', 'Health not well', 'Reasi, J&K', '9963541258', '2023-06-02', '17:52:25', '2023-06-21', 'not-verified', '0000-00-00 00:00:00', '2023-05-29 09:43:28', '2023-06-06 10:16:28'),
+(4, 9, 3, 7, 'DEF456s', 'active', 'rejected', 'pending', 'director', 'Not allowed', '405', 'A', 'Marriage', 'Reasi, J&K', '9963541258', '2023-06-16', '17:52:25', '2023-06-24', 'not-verified', '0000-00-00 00:00:00', '2023-05-29 09:43:28', '2023-06-06 11:18:50');
 
 -- --------------------------------------------------------
 
@@ -108,7 +111,7 @@ CREATE TABLE `hostels` (
   `id` int(11) NOT NULL,
   `hostel_name` varchar(255) NOT NULL,
   `teacher_id` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `hostels`
@@ -136,7 +139,7 @@ CREATE TABLE `users` (
   `hostel_id` int(11) DEFAULT NULL,
   `course_id` int(11) DEFAULT NULL,
   `dept_id` int(11) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `users`

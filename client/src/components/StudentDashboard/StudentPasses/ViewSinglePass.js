@@ -15,12 +15,71 @@ import {
 } from "@mui/material";
 import IconButton from "@mui/material/IconButton";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
+import { CheckCircleOutlined } from "@mui/icons-material";
 import withAuthCheck from "../../checkAuth";
 import QRCode from "qrcode.react";
+import { Button } from "@mui/material";
+import PrintIcon from "@mui/icons-material/Print";
 
 const ViewSinglePass = ({ onBack, id }) => {
   const tokenJwt = localStorage.getItem("user_token"); // fetch token from localstorage
   const [formattedData, setData] = useState(null);
+
+  const convertToFormattedDateTime = (datetimeStr) => {
+    const datetime = new Date(datetimeStr);
+    const options = {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
+      hour12: true,
+    };
+    return datetime.toLocaleString("en-GB", options);
+  };
+
+  const handlePrint = () => {
+    const printButton = document.getElementById("print-button");
+    const backButton = document.getElementById("back-button");
+    const drawer = document.querySelector(".MuiDrawer-root");
+
+    if (printButton) {
+      printButton.style.display = "none"; // Hide the print button
+      backButton.style.display = "none"; // Hide the back button
+    }
+
+    if (drawer) {
+      drawer.style.display = "none"; // Hide the nav drawer
+    }
+
+    // Set CSS styles for A4 page layout
+    const style = document.createElement("style");
+    style.innerHTML = `
+      @page {
+        size: A4;
+        margin: 0;
+      }
+      @media print {
+      
+      }
+    `;
+    document.head.appendChild(style);
+
+    window.print(); // Print the page
+
+    setTimeout(() => {
+      if (drawer) {
+        drawer.style.display = "block"; // Show the nav drawer again after printing
+      }
+      if (printButton) {
+        printButton.style.display = "inline-flex"; // Show the print button again after printing
+      }
+      if (backButton) {
+        backButton.style.display = "inline-flex"; // Show the back button again after printing
+      }
+      document.head.removeChild(style); // Remove the CSS styles for A4 page layout
+    }, 100); // Delay to show the nav drawer and print button after printing (100 milliseconds)
+  };
 
   useEffect(() => {
     fetch(`${process.env.REACT_APP_API_BASE_URL}/singlegatepass/${id}`, {
@@ -37,6 +96,7 @@ const ViewSinglePass = ({ onBack, id }) => {
           leaving_date: result.leaving_date,
           leaving_time: result.leaving_time,
           returning_date: result.returning_date,
+          dept_pass_status: result.dept_pass_status,
           pass_status: result.pass_status,
           warden_pass_status: result.warden_pass_status,
           hostel_name: result.hostel_name,
@@ -46,7 +106,10 @@ const ViewSinglePass = ({ onBack, id }) => {
           room_no: result.room_no,
           address: result.address,
           contact_no: result.contact_no,
+          rejected_by: result.rejected_by,
           reject_reason: result.reject_reason,
+          security_clearance: result.security_clearance,
+          security_clearance_datetime: result.security_clearance_datetime,
         };
         setData(formattedData);
       })
@@ -59,7 +122,12 @@ const ViewSinglePass = ({ onBack, id }) => {
         title={
           <div style={{ display: "flex", alignItems: "center" }}>
             <Typography variant="h6" fontWeight="bold">
-              <IconButton aria-label="Back" onClick={onBack}>
+              <IconButton
+                aria-label="Back"
+                onClick={onBack}
+                color="#000"
+                style={{ borderRadius: "50%" }}
+              >
                 <ArrowBackIcon />
               </IconButton>
               Pass Details
@@ -81,19 +149,24 @@ const ViewSinglePass = ({ onBack, id }) => {
                     : "black",
               }}
             >
-              <span style={{ color: "#000" }}>Pass Status:</span>{" "}
+              <span style={{ color: "#000" }}>Final Pass Status:</span>{" "}
               {formattedData?.warden_pass_status.charAt(0).toUpperCase() +
                 formattedData?.warden_pass_status.slice(1)}
             </Typography>
           </div>
         }
-        style={{ padding: "0" }}
+        style={{ paddingTop: "10px" }}
       />{" "}
-         {formattedData && formattedData.warden_pass_status === "rejected" && (
+      {formattedData && (formattedData?.warden_pass_status === "rejected" ||
+                        formattedData?.dept_pass_status === "rejected") && (
         <Box m={2}>
           <Alert severity="error">
-            <Typography fontWeight="bold">Rejected Reason:</Typography>
-            <Typography>{formattedData.reject_reason}</Typography>
+            <Typography fontWeight="bold">
+              Rejected by:{" "}
+              {formattedData?.rejected_by.charAt(0).toUpperCase() +
+                formattedData?.rejected_by.slice(1)}
+            </Typography>
+            <Typography>Reason: {formattedData?.reject_reason}</Typography>
           </Alert>
         </Box>
       )}
@@ -206,6 +279,37 @@ const ViewSinglePass = ({ onBack, id }) => {
                   </TableCell>
                 </TableRow>
 
+                {formattedData?.warden_pass_status === "approved" && (
+                  <TableRow>
+                    <TableCell align="center" component="th" scope="row">
+                      <Typography fontWeight="bold">
+                        Security Clearance
+                      </Typography>
+                    </TableCell>
+                    <TableCell align="center">
+                      <Box
+                        display="flex"
+                        alignItems="center"
+                        justifyContent="center"
+                      >
+                        <CheckCircleOutlined
+                          style={{ color: "green", marginRight: "5px" }}
+                        />
+                        <Typography>
+                          {formattedData?.security_clearance
+                            .charAt(0)
+                            .toUpperCase() +
+                            formattedData?.security_clearance.slice(1)}{" "}
+                          on{" "}
+                          {convertToFormattedDateTime(
+                            formattedData?.security_clearance_datetime
+                          )}
+                        </Typography>
+                      </Box>
+                    </TableCell>
+                  </TableRow>
+                )}
+
                 <TableRow>
                   <TableCell align="center" colSpan={2}>
                     <QRCode
@@ -213,6 +317,28 @@ const ViewSinglePass = ({ onBack, id }) => {
                       size={128} // Or any other size you want
                       level={"H"} // Error correction level, can be L, M, Q, H. Higher means more robust QR codes but also more complex image
                     />
+                  </TableCell>
+                </TableRow>
+                <TableRow>
+                  <TableCell align="center" colSpan={2}>
+                    <Button
+                      variant="contained"
+                      id="print-button"
+                      startIcon={<PrintIcon />}
+                      onClick={handlePrint}
+                    >
+                      Print
+                    </Button>
+                    <span> </span>
+                    <Button
+                      variant="contained"
+                      id="back-button"
+                      color="success"
+                      startIcon={<ArrowBackIcon />}
+                      onClick={onBack}
+                    >
+                      Go Back
+                    </Button>
                   </TableCell>
                 </TableRow>
               </TableBody>

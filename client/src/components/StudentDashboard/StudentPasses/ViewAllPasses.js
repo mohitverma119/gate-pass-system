@@ -73,6 +73,7 @@ const ViewAllPasses = () => {
         leaving_time: item.leaving_time,
         returning_date: item.returning_date,
         pass_status: item.pass_status,
+        dept_pass_status: item.dept_pass_status,
         warden_pass_status: item.warden_pass_status,
       }));
 
@@ -235,16 +236,7 @@ const ViewAllPasses = () => {
                       direction={order}
                       onClick={createSortHandler("leaving_date")}
                     >
-                      Leaving Date
-                    </TableSortLabel>
-                  </TableCell>
-                  <TableCell align="left">
-                    <TableSortLabel
-                      active={orderBy === "leaving_time"}
-                      direction={order}
-                      onClick={createSortHandler("leaving_time")}
-                    >
-                      Leaving Time
+                      Leaving Date & Time
                     </TableSortLabel>
                   </TableCell>
                   <TableCell align="left">
@@ -271,7 +263,16 @@ const ViewAllPasses = () => {
                       direction={order}
                       onClick={createSortHandler("warden_pass_status")}
                     >
-                      Pass Status
+                      Director's Approval
+                    </TableSortLabel>
+                  </TableCell>
+                  <TableCell align="left">
+                    <TableSortLabel
+                      active={orderBy === "warden_pass_status"}
+                      direction={order}
+                      onClick={createSortHandler("warden_pass_status")}
+                    >
+                      Warden's Approval
                     </TableSortLabel>
                   </TableCell>
                   <TableCell align="center">Action</TableCell>
@@ -359,23 +360,48 @@ const ViewAllPasses = () => {
                       {gatepass.id}
                     </TableCell>
                     <TableCell align="left">
-                      {new Date(gatepass.leaving_date).toLocaleDateString()}
+                      <span>
+                        {new Date(gatepass.leaving_date).toLocaleDateString(
+                          "en-GB",
+                          {
+                            day: "2-digit",
+                            month: "2-digit",
+                            year: "numeric",
+                          }
+                        )}
+                        ,{" "}
+                        {new Date(
+                          `1970-01-01T${gatepass.leaving_time}Z`
+                        ).toLocaleTimeString("en-US", {
+                          hour: "2-digit",
+                          minute: "2-digit",
+                          hour12: true,
+                        })}
+                      </span>
                     </TableCell>
 
-                    <TableCell align="left">
-                      {new Date(
-                        `1970-01-01T${gatepass.leaving_time}Z`
-                      ).toLocaleTimeString("en-US", {
-                        hour: "2-digit",
-                        minute: "2-digit",
-                        hour12: true,
-                      })}
-                    </TableCell>
                     <TableCell align="left">
                       {new Date(gatepass.returning_date).toLocaleDateString()}
                     </TableCell>
                     <TableCell align="left">
                       {gatepass.leaving_purpose}
+                    </TableCell>
+                    <TableCell
+                      sx={{ fontWeight: "bold" }}
+                      align="left"
+                      style={{
+                        color:
+                          gatepass.dept_pass_status === "approved"
+                            ? "green"
+                            : gatepass.dept_pass_status === "rejected"
+                            ? "red"
+                            : gatepass.dept_pass_status === "pending"
+                            ? "orange"
+                            : "black",
+                      }}
+                    >
+                      {gatepass.dept_pass_status.charAt(0).toUpperCase() +
+                        gatepass.dept_pass_status.slice(1)}
                     </TableCell>
                     <TableCell
                       sx={{ fontWeight: "bold" }}
