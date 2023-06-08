@@ -104,6 +104,42 @@ app.post('/api/gatepasses', verifyToken, (req, res) => {
   }
 });
 
+
+// Handle GET requests for all hostel names
+app.get('/api/hostels', verifyToken, (req, res) => {
+  const { role } = req.user;
+  if (role === 'admin' || role === 'warden' || role === 'security_guard' || role === 'student') {
+    pool.query('SELECT * FROM hostels', (error, results) => {
+      if (error) {
+        console.error(error);
+        res.status(500).send('Internal server error');
+      } else {
+        res.json(results);
+      }
+    });
+  } else {
+    res.status(403).send('Forbidden');
+  }
+});
+
+
+// Handle GET requests for all courses names
+app.get('/api/allcourses', verifyToken, (req, res) => {
+  const { role } = req.user;
+  if (role === 'admin' || role === 'warden' || role === 'security_guard' || role === 'student') {
+    pool.query('SELECT * FROM courses', (error, results) => {
+      if (error) {
+        console.error(error);
+        res.status(500).send('Internal server error');
+      } else {
+        res.json(results);
+      }
+    });
+  } else {
+    res.status(403).send('Forbidden');
+  }
+});
+
 // Handle GET requests for all gatepasses
 app.get('/api/gatepasses', verifyToken, (req, res) => {
   const { role } = req.user;

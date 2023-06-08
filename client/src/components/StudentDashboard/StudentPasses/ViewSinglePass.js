@@ -161,7 +161,7 @@ const ViewSinglePass = ({ onBack, id }) => {
               }}
               align="left"
             >
-              <span style={{ color: "#000" }}>Director's Remarks:</span>{" "}
+              <span style={{ color: "#000" }}>HOD Remarks:</span>{" "}
               {formattedData?.dept_pass_status.charAt(0).toUpperCase() +
                 formattedData?.dept_pass_status.slice(1)}
             </Typography>
@@ -196,8 +196,10 @@ const ViewSinglePass = ({ onBack, id }) => {
               align="left"
             >
               <span style={{ color: "#000" }}>Warden's Remarks:</span>{" "}
-              {formattedData?.warden_pass_status.charAt(0).toUpperCase() +
-                formattedData?.warden_pass_status.slice(1)}
+              {formattedData?.dept_pass_status === "rejected"
+                ? "N/A"
+                : formattedData?.warden_pass_status.charAt(0).toUpperCase() +
+                  formattedData?.warden_pass_status.slice(1)}
             </Typography>
           </Box>
         }
@@ -210,8 +212,7 @@ const ViewSinglePass = ({ onBack, id }) => {
             <Alert severity="error">
               <Typography fontWeight="bold">
                 Rejected by:{" "}
-                {formattedData?.rejected_by.charAt(0).toUpperCase() +
-                  formattedData?.rejected_by.slice(1)}
+                {formattedData?.rejected_by.toUpperCase()}
               </Typography>
               <Typography>Reason: {formattedData?.reject_reason}</Typography>
             </Alert>

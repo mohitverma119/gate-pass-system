@@ -264,7 +264,7 @@ const ViewAllPasses = () => {
                       direction={order}
                       onClick={createSortHandler("dept_pass_status")}
                     >
-                      Director's Remarks
+                      HOD Remarks
                     </TableSortLabel>
                   </TableCell>
                   <TableCell align="left">
@@ -382,7 +382,14 @@ const ViewAllPasses = () => {
                     </TableCell>
 
                     <TableCell align="left">
-                      {new Date(gatepass.returning_date).toLocaleDateString()}
+                      {new Date(gatepass.returning_date).toLocaleDateString(
+                        "en-GB",
+                        {
+                          day: "2-digit",
+                          month: "2-digit",
+                          year: "numeric",
+                        }
+                      )}
                     </TableCell>
                     <TableCell align="left">
                       {gatepass.leaving_purpose}
@@ -418,8 +425,10 @@ const ViewAllPasses = () => {
                             : "black",
                       }}
                     >
-                      {gatepass.warden_pass_status.charAt(0).toUpperCase() +
-                        gatepass.warden_pass_status.slice(1)}
+                      {gatepass.dept_pass_status === "rejected"
+                        ? "N/A"
+                        : gatepass.warden_pass_status.charAt(0).toUpperCase() +
+                          gatepass.warden_pass_status.slice(1)}
                     </TableCell>
 
                     <TableCell align="center">
@@ -434,28 +443,30 @@ const ViewAllPasses = () => {
                         </IconButton>
                       </Tooltip>
                       {gatepass.pass_status !== "completed" &&
-                        gatepass.warden_pass_status !== "rejected" && (
-                          <>
-                             <Tooltip title="Edit">
-                            <IconButton
-                              color="primary"
-                              size="small"
-                              aria-label="Edit" 
-                            >
-                              <EditIcon fontSize="inherit" />
-                            </IconButton>
-                            </Tooltip>
-                            <Tooltip title="Delete">
-                            <IconButton
-                              sx={{ color: red[500] }}
-                              size="small"
-                              aria-label="Delete"
-                            >
-                              <DeleteIcon fontSize="inherit" />
-                            </IconButton>
-                            </Tooltip>
-                          </>
-                        )}
+  gatepass.warden_pass_status !== "rejected" &&
+  gatepass.dept_pass_status !== "rejected" && (
+    <>
+      <Tooltip title="Edit">
+        <IconButton
+          color="primary"
+          size="small"
+          aria-label="Edit"
+        >
+          <EditIcon fontSize="inherit" />
+        </IconButton>
+      </Tooltip>
+      <Tooltip title="Delete">
+        <IconButton
+          sx={{ color: red[500] }}
+          size="small"
+          aria-label="Delete"
+        >
+          <DeleteIcon fontSize="inherit" />
+        </IconButton>
+      </Tooltip>
+    </>
+)}
+
                     </TableCell>
                   </TableRow>
                 ))}

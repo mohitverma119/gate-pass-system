@@ -1,5 +1,6 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import dayjs from "dayjs";
+import 'dayjs/locale/en-gb';
 import { Button, TextField, Box, Typography, Grid } from "@mui/material";
 import { FormControl, InputLabel, Select, MenuItem } from "@mui/material";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
@@ -13,6 +14,59 @@ const ApplyNewPass = () => {
   const [roomNo, setRoomNo] = useState("");
   const [blockNo, setBlockNo] = useState("");
   const [leavingPurpose, setLeavingPurpose] = useState("");
+  const [hostels, setHostels] = useState([]);
+  const [courses, setCourses] = useState([]);
+  const [selectedCourse, setSelectedCourse] = useState(""); // New state variable for the selected course
+  const [selectedHostel, setSelectedHostel] = useState(""); // New state variable for the selected hostel
+  const [leavingDate, setLeavingDate] = useState(null);
+
+  useEffect(() => {
+    const fetchHostelsAndCourses = async () => {
+      const token = localStorage.getItem("user_token"); // fetch token from localstorage
+
+      const responseHostels = await fetch(
+        `${process.env.REACT_APP_API_BASE_URL}/hostels`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `${token}`,
+          },
+        }
+      );
+
+      const responseCourses = await fetch(
+        `${process.env.REACT_APP_API_BASE_URL}/allcourses`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `${token}`,
+          },
+        }
+      );
+
+      const dataHostels = await responseHostels.json();
+      const dataCourses = await responseCourses.json();
+
+      setHostels(dataHostels);
+      setCourses(dataCourses);
+    };
+
+    fetchHostelsAndCourses();
+  }, []);
+
+  const handleCourseChange = (event) => {
+    setSelectedCourse(event.target.value);
+  };
+
+  const handleHostelChange = (event) => {
+    setSelectedHostel(event.target.value); // New handler for hostel selection
+  };
+
+  const handleLeavingDateChange = (date) => {
+    setLeavingDate(date);
+  };
 
   const handleRoomNo = (event) => {
     setRoomNo(event.target.value);
@@ -43,6 +97,7 @@ const ApplyNewPass = () => {
           <TextField
             label="Full Name"
             variant="outlined"
+            required
             value={localStorage.getItem("user_name")}
             InputProps={{ readOnly: true }}
             sx={{ mb: 2, width: "100%" }}
@@ -52,10 +107,58 @@ const ApplyNewPass = () => {
           <TextField
             label="Entry No"
             variant="outlined"
+            required
             value={localStorage.getItem("entry_emp_no")}
             InputProps={{ readOnly: true }}
             sx={{ mb: 2, width: "100%" }}
           />
+        </Grid>
+      </Grid>
+
+      <Grid container spacing={2}>
+        <Grid item xs={12} sm={6}>
+          <FormControl fullWidth>
+            <InputLabel id="course-select-label">Course Name</InputLabel>
+            <Select
+              labelId="course-select-label"
+              id="course-select"
+              label="Course Name"
+              value={selectedCourse}
+              onChange={handleCourseChange}
+              sx={{ mb: 2, width: "100%" }}
+              required
+            >
+              {courses
+                .sort((a, b) => a.course_name.localeCompare(b.course_name))
+                .map((course) => (
+                  <MenuItem key={course.id} value={course.id}>
+                    {course.course_name}
+                  </MenuItem>
+                ))}
+            </Select>
+          </FormControl>
+        </Grid>
+        <Grid item xs={12} sm={6}>
+          <FormControl fullWidth>
+            <InputLabel id="hostel-select-label">Hostel Name</InputLabel>
+            <Select
+              labelId="hostel-select-label"
+              id="hostel-select"
+              label="Hostel Name"
+              value={selectedHostel}
+              onChange={handleHostelChange}
+              sx={{ mb: 2, width: "100%" }}
+              required
+            >
+              {hostels
+                .sort((a, b) => a.hostel_name.localeCompare(b.hostel_name))
+                .map((hostel) => (
+                  <MenuItem key={hostel.id} value={hostel.id}>
+                    {hostel.hostel_name}
+                  </MenuItem>
+                ))}
+            </Select>
+          </FormControl>
         </Grid>
       </Grid>
 
@@ -118,11 +221,14 @@ const ApplyNewPass = () => {
 
       <Grid container spacing={2}>
         <Grid item xs={12} sm={6}>
-          <LocalizationProvider dateAdapter={AdapterDayjs}>
+          <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale={"en-gb"}>
             <DatePicker
-              /*defaultValue={dayjs("2022-04-17")}*/
               label="Leaving Date"
-              variant="outlined"
+              value={leavingDate}
+              onChange={handleLeavingDateChange}
+              renderInput={(params) => (
+                <TextField {...params} variant="outlined" />
+              )}
               sx={{ mb: 2, width: "100%" }}
             />
           </LocalizationProvider>
@@ -130,7 +236,7 @@ const ApplyNewPass = () => {
         <Grid item xs={12} sm={6}>
           <LocalizationProvider dateAdapter={AdapterDayjs}>
             <TimePicker
-              /*defaultValue={dayjs("2022-04-17T15:30")}*/
+           
               label="Leaving Time"
               variant="outlined"
               sx={{ mb: 2, width: "100%" }}
