@@ -14,7 +14,7 @@ import ListIcon from "@mui/icons-material/List";
 import PersonIcon from "@mui/icons-material/Person";
 import { useNavigate } from "react-router-dom";
 
-const drawerWidth = 240;
+const drawerWidth = "auto";
 
 const buttonActiveColor = "#a9a7ac9c";
 
@@ -84,6 +84,7 @@ const DrawerContent = ({ path, setDrawerOpen, isMobile }) => {
           </ListItemIcon>
           <ListItemText primary="Home" />
         </ListItemButton>
+
         <ListItemButton
           button
           key="Apply"
@@ -102,6 +103,7 @@ const DrawerContent = ({ path, setDrawerOpen, isMobile }) => {
           </ListItemIcon>
           <ListItemText primary="Apply New Pass" />
         </ListItemButton>
+
         <ListItemButton
           button
           key="ViewAllPasses"
