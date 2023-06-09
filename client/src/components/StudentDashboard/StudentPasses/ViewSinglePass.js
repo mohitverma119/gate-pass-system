@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from "react";
+import { useParams, useNavigate,useLocation } from 'react-router-dom';
+
 import {
   TableContainer,
   Paper,
@@ -21,7 +23,15 @@ import QRCode from "qrcode.react";
 import { Button } from "@mui/material";
 import PrintIcon from "@mui/icons-material/Print";
 
-const ViewSinglePass = ({ onBack, id }) => {
+const ViewSinglePass = () => {
+
+  const { id } = useParams();
+
+  const location = useLocation();
+  //const id = location.state.id;
+  console.log(id);
+  const navigate = useNavigate();
+
   const tokenJwt = localStorage.getItem("user_token"); // fetch token from localstorage
   const [formattedData, setData] = useState(null);
 
@@ -37,6 +47,12 @@ const ViewSinglePass = ({ onBack, id }) => {
     };
     return datetime.toLocaleString("en-GB", options);
   };
+
+  const handleBack = () => {
+    navigate(-1);
+
+  };
+
 
   const handlePrint = () => {
     const printButton = document.getElementById("print-button");
@@ -135,7 +151,7 @@ const ViewSinglePass = ({ onBack, id }) => {
             <Typography variant="h6" fontWeight="bold">
               <IconButton
                 aria-label="Back"
-                onClick={onBack}
+                onClick={handleBack}
                 color="#000"
                 id="single-pass-back-button"
                 style={{ borderRadius: "50%" }}
@@ -399,7 +415,7 @@ const ViewSinglePass = ({ onBack, id }) => {
                       id="back-button"
                       color="success"
                       startIcon={<ArrowBackIcon />}
-                      onClick={onBack}
+                      onClick={handleBack}
                     >
                       Go Back
                     </Button>

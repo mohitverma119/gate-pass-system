@@ -6,9 +6,7 @@ import {
   Box,
   ListItemButton,
 } from "@mui/material";
-import {
-  Home as HomeIcon,
-} from "@mui/icons-material";
+import { Home as HomeIcon } from "@mui/icons-material";
 
 import EditNoteIcon from "@mui/icons-material/EditNote";
 import PowerSettingsNewIcon from "@mui/icons-material/PowerSettingsNew";
@@ -20,12 +18,8 @@ const drawerWidth = 240;
 
 const buttonActiveColor = "#a9a7ac9c";
 
-const DrawerContent = ({ setDrawerOpen, handleItemClick, isMobile }) => {
+const DrawerContent = ({ path, setDrawerOpen, isMobile }) => {
   const [activeButton, setActiveButton] = useState("home");
-
-  // const theme = useTheme();
-  //const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
-
   const navigate = useNavigate();
 
   const handleLogout = () => {
@@ -36,18 +30,33 @@ const DrawerContent = ({ setDrawerOpen, handleItemClick, isMobile }) => {
 
   const handleClick = (item) => {
     setActiveButton(item);
-    handleItemClick(item);
+
+    switch (item) {
+      case "home":
+        navigate(`${path}`);
+        break;
+      case "apply":
+        navigate(`${path}/apply-new-pass`);
+        break;
+      case "viewAllPasses":
+        navigate(`${path}/view-all-passes`);
+        break;
+      case "myProfile":
+        navigate(`${path}/my-profile`);
+        break;
+      default:
+        break;
+    }
 
     if (isMobile) {
-      // Close the drawer with a slight delay
       setTimeout(() => {
         setDrawerOpen(false);
-      }, 50); // 50 milliseconds delay
+      }, 50);
     }
   };
 
   return (
-    <Box sx={{ width: drawerWidth, marginTop: 4  }} role="presentation">
+    <Box sx={{ width: drawerWidth, marginTop: 4 }} role="presentation">
       <Box
         sx={{
           display: "flex",
@@ -55,13 +64,7 @@ const DrawerContent = ({ setDrawerOpen, handleItemClick, isMobile }) => {
           justifyContent: "center",
           p: 2,
         }}
-      >
-       {/* <img
-          src="https://www.smvdu.ac.in/templates/jsmvdu2017/img/bklogo-headerg20.png"
-          alt="Logo"
-          style={{ width: "65%", height: "auto" }}
-      />*/}
-      </Box>
+      ></Box>
       <List>
         <ListItemButton
           button

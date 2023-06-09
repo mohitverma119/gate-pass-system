@@ -3,12 +3,9 @@ import { TextField, Button, Typography, Box } from "@mui/material";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
-//const API_BASE_URL = 'http://localhost:3000/api'; // Replace with your backend server URL
-
 const LoginForm = () => {
   const [loginEmail, setEmail] = useState("nisha@example.com");
   const [password, setPassword] = useState("password");
-
   const [error, setError] = useState("");
   const navigate = useNavigate();
 
@@ -21,77 +18,49 @@ const LoginForm = () => {
   };
 
   const handleLogin = async (event) => {
-    // Prevent the default form submission behavior
     event.preventDefault();
-  
+
     try {
       const response = await axios.post(
         `${process.env.REACT_APP_API_BASE_URL}/login`,
         { loginEmail, password }
       );
-  
-      const {
-        token,
-        id,
-        email,
-        entry_emp_no,
-        fullname,
-        hostel_id,
-        course_id,
-        role,
-      } = response.data;
-  
-      // Store the token, email, and role in local storage or as needed for future requests
-      localStorage.setItem("user_token", token);
-      localStorage.setItem("user_id", id);
-      localStorage.setItem("user_email", email);
-      localStorage.setItem("entry_emp_no", entry_emp_no);
-      localStorage.setItem("user_name", fullname);
-      localStorage.setItem("user_role", role);
-  
-      // Redirect based on user role
-      switch (role) {
-        case 'student':
-          navigate("/student-dashboard");
-          break;
-        case 'warden':
-          navigate("/warden-dashboard");
-          break;
-        case 'director':
-          navigate("/director-dashboard");
-          break;
-        default:
-          // Default behavior, you can modify this as you see fit
-          navigate("/");
-          break;
+
+      const userData = response.data;
+
+      // Store the user data in local storage if it exists
+      if (userData) {
+        const { token, id, email, entry_emp_no, fullname, role } = userData;
+
+        localStorage.setItem("user_token", token);
+        localStorage.setItem("user_id", id);
+        localStorage.setItem("user_email", email);
+        localStorage.setItem("entry_emp_no", entry_emp_no);
+        localStorage.setItem("user_name", fullname);
+        localStorage.setItem("user_role", role);
+
+        // Redirect based on user role
+        switch (role) {
+          case "student":
+            navigate("/student-dashboard");
+            break;
+          case "warden":
+            navigate("/warden-dashboard");
+            break;
+          case "director":
+            navigate("/director-dashboard");
+            break;
+          default:
+            navigate("/");
+            break;
+        }
       }
-  
+
     } catch (error) {
       console.error("Error sending login request:", error);
       setError("Invalid email or password");
     }
   };
-  
-
-  /*const handleLogin = async () => {
-    try {
-      const response = await axios.post(`${BASE_URL}/login`, { email, password });
-      const { token, email, role } = response.data;
-  
-      // Store the token, email and role in local storage or as needed for future requests
-      localStorage.setItem('token', token);
-      localStorage.setItem('email', email);
-      localStorage.setItem('role', role);
-  
-      // Handle successful login, such as redirecting to the dashboard
-      // or updating the UI state
-      // Redirect the user to a protected route or update the application state
-      // For example, you can use react-router-dom to navigate to a different page
-      navigate('/dashboard');
-    } catch (error) {
-      setError('Invalid email or password');
-    }
-  };*/
 
   return (
     <Box

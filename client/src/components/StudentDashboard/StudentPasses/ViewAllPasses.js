@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import {
   TableContainer,
   Paper,
@@ -24,15 +25,6 @@ import { Button, ButtonGroup } from "@mui/material";
 import { Typography } from "@mui/material";
 import withAuthCheck from "../../checkAuth";
 import Tooltip from "@mui/material/Tooltip";
-/* const createData = (name, calories, fat, carbs, protein,id) => {
-  return { name, calories, fat, carbs, protein,id };
-}; */
-
-/* const initialRows = [
-  createData("Frozen yoghurt", 159, 6.0, 'Pending', 4.0,1),
-  createData("Ice cream sandwich", 237, 9.0, 'Approved', 4.3,2),
-  createData("Eclair", 262, 16.0, 'Rejected', 6.0,3),
-]; */
 
 const ViewAllPasses = () => {
   const [searchTerm, setSearchTerm] = useState("");
@@ -46,6 +38,12 @@ const ViewAllPasses = () => {
   const [orderBy, setOrderBy] = useState(null);
   const [order, setOrder] = useState("asc");
   const [currentStatus, setCurrentStatus] = useState("all");
+  const navigate = useNavigate();
+
+
+  const handleViewPass = (id) => {
+    navigate("/viewSinglePass", { state: { id: id } });
+  };
 
   useEffect(() => {
     const fetchGatepasses = async () => {
@@ -65,7 +63,7 @@ const ViewAllPasses = () => {
 
       const data = await response.json();
 
-      console.log(data);
+      //console.log(data);
 
       const formattedData = data.map((item) => ({
         id: item.id,
@@ -141,10 +139,10 @@ const ViewAllPasses = () => {
   const emptyRows =
     rowsPerPage - Math.min(rowsPerPage, gatepasses.length - page * rowsPerPage);
 
-  const handleViewPass = (id) => {
+ /*  const handleViewPass = (id) => {
     setViewPass(true);
-    setSelectedId(id); // set selected row id
-  };
+    setSelectedId(id); 
+  }; */
 
   const handleBack = () => {
     setViewPass(false);
@@ -280,57 +278,6 @@ const ViewAllPasses = () => {
                 </TableRow>
               </TableHead>
 
-              {/*   <TableBody>
-                {(rowsPerPage > 0
-                  ? gatepasses.slice(
-                      page * rowsPerPage,
-                      page * rowsPerPage + rowsPerPage
-                    )
-                  : gatepasses
-                ).map((gatepasses) => (
-                  <TableRow
-                    key={gatepasses.name}
-                    sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
-                  >
-                    <TableCell component="th" scope="row">
-                      {gatepasses.pass_status}
-                    </TableCell>
-                    <TableCell align="right">{gatepasses.pass_status}</TableCell>
-                    <TableCell align="right">{gatepasses.pass_status}</TableCell>
-                    <TableCell align="right">{gatepasses.pass_status}</TableCell>
-                    <TableCell align="right">
-                      <IconButton
-                        color="success"
-                        size="small"
-                        aria-label="View"
-                        onClick={() => handleViewPass(gatepasses.id)}
-                        >
-                        <VisibilityIcon fontSize="inherit" />
-                      </IconButton>
-                      <IconButton
-                        color="primary"
-                        size="small"
-                        aria-label="Edit"
-                      >
-                        <EditIcon fontSize="inherit" />
-                      </IconButton>
-                      <IconButton
-                        sx={{ color: red[500] }}
-                        size="small"
-                        aria-label="Delete"
-                      >
-                        <DeleteIcon fontSize="inherit" />
-                      </IconButton>
-                    </TableCell>
-                  </TableRow>
-                ))}
-                {emptyRows > 0 && (
-                  <TableRow style={{ height: 53 * emptyRows }}>
-                    <TableCell colSpan={5} />
-                  </TableRow>
-                )}
-              </TableBody> */}
-
               <TableBody>
                 {(rowsPerPage > 0
                   ? gatepasses
@@ -437,36 +384,35 @@ const ViewAllPasses = () => {
                           color="success"
                           size="small"
                           aria-label="View"
-                          onClick={() => handleViewPass(gatepass.id)}
+                          onClick={() => navigate(`/student-dashboard/view-single-pass/${gatepass.id}`)}
                         >
                           <VisibilityIcon fontSize="inherit" />
                         </IconButton>
                       </Tooltip>
                       {gatepass.pass_status !== "completed" &&
-  gatepass.warden_pass_status !== "rejected" &&
-  gatepass.dept_pass_status !== "rejected" && (
-    <>
-      <Tooltip title="Edit">
-        <IconButton
-          color="primary"
-          size="small"
-          aria-label="Edit"
-        >
-          <EditIcon fontSize="inherit" />
-        </IconButton>
-      </Tooltip>
-      <Tooltip title="Delete">
-        <IconButton
-          sx={{ color: red[500] }}
-          size="small"
-          aria-label="Delete"
-        >
-          <DeleteIcon fontSize="inherit" />
-        </IconButton>
-      </Tooltip>
-    </>
-)}
-
+                        gatepass.warden_pass_status !== "rejected" &&
+                        gatepass.dept_pass_status !== "rejected" && (
+                          <>
+                            <Tooltip title="Edit">
+                              <IconButton
+                                color="primary"
+                                size="small"
+                                aria-label="Edit"
+                              >
+                                <EditIcon fontSize="inherit" />
+                              </IconButton>
+                            </Tooltip>
+                            <Tooltip title="Delete">
+                              <IconButton
+                                sx={{ color: red[500] }}
+                                size="small"
+                                aria-label="Delete"
+                              >
+                                <DeleteIcon fontSize="inherit" />
+                              </IconButton>
+                            </Tooltip>
+                          </>
+                        )}
                     </TableCell>
                   </TableRow>
                 ))}
